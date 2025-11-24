@@ -1,4 +1,13 @@
-const API_BASE = "http://localhost:5000";
+// Tentukan base URL API backend.
+// - Jika frontend dibuka lewat Live Server (port 5500),
+//   arahkan ke backend FastAPI di port 8000.
+// - Jika dibuka dari FastAPI sendiri (port 8000, path /frontend/...),
+//   gunakan origin yang sama (string kosong).
+const API_BASE =
+  window.location.port === "5500"
+    ? "http://127.0.0.1:8000"
+    : "";
+console.log("API_BASE =", API_BASE);
 let token = localStorage.getItem("token");
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -51,67 +60,80 @@ function showRegister() {
 
 async function handleLogin(e) {
   e.preventDefault();
-  const email = document.getElementById("login-email").value;
-  const password = document.getElementById("login-password").value;
+  console.log('handleLogin called');
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+  console.log('Email:', email, 'Password length:', password.length);
 
   try {
-    const response = await fetch(`${API_BASE}/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: new URLSearchParams({
-        username: email,
-        password: password,
-      }),
-    });
+        console.log('Sending login request');
+        const response = await fetch(`${API_BASE}/auth/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                username: email,
+                password: password,
+            }),
+        });
+        console.log('Response status:', response.status);
 
-    if (response.ok) {
-      const data = await response.json();
-      token = data.access_token;
-      localStorage.setItem("token", token);
-      showDashboard();
-    } else {
-      alert("Login failed");
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Login successful, token:', data.access_token.substring(0, 10) + '...');
+            token = data.access_token;
+            localStorage.setItem('token', token);
+            showDashboard();
+        } else {
+            const error = await response.json();
+            console.log('Login failed, error:', error);
+            alert(`Login failed: ${error.detail || 'Unknown error'}`);
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        alert('Login error: ' + error.message);
     }
-  } catch (error) {
-    console.error("Login error:", error);
-    alert("Login error");
-  }
 }
 
 async function handleRegister(e) {
   e.preventDefault();
-  const name = document.getElementById("reg-name").value;
-  const email = document.getElementById("reg-email").value;
-  const password = document.getElementById("reg-password").value;
-  const domicile = document.getElementById("reg-domicile").value;
+  console.log('handleRegister called');
+  const name = document.getElementById('reg-name').value;
+  const email = document.getElementById('reg-email').value;
+  const password = document.getElementById('reg-password').value;
+  const domicile = document.getElementById('reg-domicile').value;
+  console.log('Register data:', { name, email, passwordLength: password.length, domicile });
 
   try {
-    const response = await fetch(`${API_BASE}/auth/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name,
-        email,
-        password,
-        domicile,
-      }),
-    });
+        console.log('Sending register request');
+        const response = await fetch(`${API_BASE}/auth/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name,
+                email,
+                password,
+                domicile,
+            }),
+        });
+        console.log('Register response status:', response.status);
 
-    if (response.ok) {
-      alert("Registration successful! Please login.");
-      showLogin();
-    } else {
-      const error = await response.json();
-      alert(`Registration failed: ${error.detail}`);
+        if (response.ok) {
+            console.log('Registration successful');
+            alert('Registration successful! Please login.');
+            showLogin();
+        } else {
+            const error = await response.json();
+            console.log('Registration failed, error:', error);
+            alert(`Registration failed: ${error.detail || 'Unknown error'}`);
+        }
+    } catch (error) {
+        console.error('Register error:', error);
+        alert('Registration error: ' + error.message);
     }
-  } catch (error) {
-    console.error("Register error:", error);
-    alert("Registration error");
-  }
 }
 
 async function handleGoogleLogin() {
@@ -144,11 +166,20 @@ async function handleScan() {
                 <p>Info: ${data.info}</p>
             `;
     } else {
-      alert("Scan failed");
+      let message = `HTTP ${response.status}`;
+      try {
+        const error = await response.json();
+        if (error && (error.detail || error.message)) {
+          message = error.detail || error.message;
+        }
+      } catch {
+        // respons bukan JSON, biarkan message default
+      }
+      alert(`Scan failed: ${message}`);
     }
   } catch (error) {
     console.error("Scan error:", error);
-    alert("Scan error");
+    alert("Scan error: " + error.message);
   }
 }
 
@@ -179,12 +210,20 @@ async function handleDeposit(e) {
       loadDeposits();
       loadUserInfo();
     } else {
-      const error = await response.json();
-      alert(`Deposit failed: ${error.detail}`);
+      let message = `HTTP ${response.status}`;
+      try {
+        const error = await response.json();
+        if (error && (error.detail || error.message)) {
+          message = error.detail || error.message;
+        }
+      } catch {
+        // respons bukan JSON, biarkan message default
+      }
+      alert(`Deposit failed: ${message}`);
     }
   } catch (error) {
     console.error("Deposit error:", error);
-    alert("Deposit error");
+    alert("Deposit error: " + error.message);
   }
 }
 
@@ -211,6 +250,12 @@ async function loadUserInfo() {
                 <p>Total Points: ${user.total_points}</p>
                 <p>Total Waste: ${user.total_waste_amount} kg</p>
             `;
+    } else {
+      console.error("Failed to load user info");
+      // Perhaps redirect to login if unauthorized
+      if (response.status === 401) {
+        handleLogout();
+      }
     }
   } catch (error) {
     console.error("Load user info error:", error);
@@ -241,6 +286,11 @@ async function loadDeposits() {
             `
         )
         .join("");
+    } else {
+      console.error("Failed to load deposits");
+      if (response.status === 401) {
+        handleLogout();
+      }
     }
   } catch (error) {
     console.error("Load deposits error:", error);
