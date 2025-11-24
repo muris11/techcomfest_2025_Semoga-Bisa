@@ -5,6 +5,9 @@ from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 import json
+from typing import List
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from .database import Base, engine, get_db
 from . import models
@@ -39,6 +42,16 @@ app = FastAPI(
     description="Backend FastAPI dengan MySQL untuk manajemen sampah, gamifikasi, dan voucher pulsa.",
     version="1.0.0",
 )
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, specify allowed origins
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
 
 # =========================================================
 # 1. AUTH & USER

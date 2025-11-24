@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ucollet - Digital Innovation for a Sustainable Future</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header>
+        <h1>Ucollet</h1>
+        <nav id="nav">
+          <button id="login-btn">Login</button>
+          <button id="register-btn">Register</button>
+        </nav>
+      </header>
+      <main>
+        <section id="auth-section">
+          <div id="login-form" class="form-container">
+            <h2>Login</h2>
+            <form id="login">
+              <input
+                type="email"
+                id="login-email"
+                placeholder="Email"
+                required
+              />
+              <input
+                type="password"
+                id="login-password"
+                placeholder="Password"
+                required
+              />
+              <button type="submit">Login</button>
+            </form>
+            <button id="google-login">Login with Google</button>
+          </div>
+          <div id="register-form" class="form-container hidden">
+            <h2>Register</h2>
+            <form id="register">
+              <input type="text" id="reg-name" placeholder="Name" required />
+              <input type="email" id="reg-email" placeholder="Email" required />
+              <input
+                type="password"
+                id="reg-password"
+                placeholder="Password"
+                required
+              />
+              <input
+                type="text"
+                id="reg-domicile"
+                placeholder="Domicile"
+                required
+              />
+              <button type="submit">Register</button>
+            </form>
+          </div>
+        </section>
+        <section id="dashboard" class="hidden">
+          <h2>Dashboard</h2>
+          <div id="user-info"></div>
+          <div id="waste-scan">
+            <h3>Scan Waste</h3>
+            <input type="file" id="waste-file" accept="image/*" />
+            <button id="scan-btn">Scan</button>
+            <div id="scan-result"></div>
+          </div>
+          <div id="deposit-form">
+            <h3>Manual Deposit</h3>
+            <form id="deposit">
+              <input
+                type="text"
+                id="waste-name"
+                placeholder="Waste Name"
+                required
+              />
+              <select id="category" required>
+                <option value="ORGANIK">Organik</option>
+                <option value="ANORGANIK_PLASTIK">Anorganik Plastik</option>
+                <option value="ANORGANIK_LOGAM">Anorganik Logam</option>
+              </select>
+              <input
+                type="number"
+                id="amount"
+                placeholder="Amount (kg)"
+                step="0.1"
+                required
+              />
+              <select id="via">
+                <option value="manual">Manual</option>
+                <option value="scan">Scan</option>
+              </select>
+              <button type="submit">Deposit</button>
+            </form>
+          </div>
+          <div id="deposits-list">
+            <h3>Your Deposits</h3>
+            <div id="deposits"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

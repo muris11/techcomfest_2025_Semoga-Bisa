@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 # Format: mysql+pymysql://user:password@host:port/database
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "mysql+pymysql://root:password@localhost:3306/ucollet_db"
+    "mysql+pymysql://root@localhost:3306/ucollet_db"
 )
 
 engine = create_engine(
