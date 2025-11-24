@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .addEventListener("click", handleGoogleLogin);
   document.getElementById("scan-btn").addEventListener("click", handleScan);
   document.getElementById("deposit").addEventListener("submit", handleDeposit);
+  document.getElementById("logout-btn").addEventListener("click", handleLogout);
 });
 
 function showAuth() {
@@ -185,6 +186,12 @@ async function handleDeposit(e) {
     console.error("Deposit error:", error);
     alert("Deposit error");
   }
+}
+
+function handleLogout() {
+  token = null;
+  localStorage.removeItem("token");
+  showAuth();
 }
 
 async function loadUserInfo() {
