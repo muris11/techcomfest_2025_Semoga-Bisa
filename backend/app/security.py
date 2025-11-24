@@ -31,7 +31,7 @@ def verify_password(plain: str, hashed: str) -> bool:
 
 
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    return pwd_context.hash(password[:72])
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:

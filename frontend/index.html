@@ -13,6 +13,7 @@
         <nav id="nav">
           <button id="login-btn">Login</button>
           <button id="register-btn">Register</button>
+          <button id="logout-btn" class="hidden">Logout</button>
         </nav>
       </header>
       <main>
@@ -31,6 +32,7 @@
                 id="login-password"
                 placeholder="Password"
                 required
+                maxlength="72"
               />
               <button type="submit">Login</button>
             </form>
@@ -46,6 +48,7 @@
                 id="reg-password"
                 placeholder="Password"
                 required
+                maxlength="72"
               />
               <input
                 type="text"
@@ -58,7 +61,10 @@
           </div>
         </section>
         <section id="dashboard" class="hidden">
-          <h2>Dashboard</h2>
+          <header>
+            <h2>Dashboard</h2>
+            <button id="logout-btn">Logout</button>
+          </header>
           <div id="user-info"></div>
           <div id="waste-scan">
             <h3>Scan Waste</h3>
