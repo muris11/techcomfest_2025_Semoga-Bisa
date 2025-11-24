@@ -50,7 +50,7 @@ class UserOut(BaseModel):
     streak_longest: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # === Waste / Setoran ===
@@ -77,7 +77,7 @@ class DepositOut(BaseModel):
     via: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # === Dashboard & Kalender ===
